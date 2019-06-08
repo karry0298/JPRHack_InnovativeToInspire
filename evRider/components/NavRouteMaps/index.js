@@ -9,6 +9,7 @@ import Dialog, { DialogTitle,DialogContent,DialogFooter,DialogButton,SlideAnimat
 import geolib from 'geolib'
 import { IP } from '../../utils/constants' 
 import openMap from 'react-native-open-maps';
+import { IPN } from '../../utils/ngrok'
 
 Mapbox.setAccessToken('sk.eyJ1Ijoia2FycnkwMjk4IiwiYSI6ImNqcXVtcXJ3aTBrZHE0Mm55MjE1bm9xM28ifQ.B3V1a-Yd0Q1PS2GDjZ-_bg');
 
@@ -22,8 +23,8 @@ export default class NavRouteMaps extends Component {
 
     this.state = {
       showAleart:false,
-      dLat:18.8282,
-      dLon:72.8888,
+      dLat:26.8903878,
+      dLon:75.8064162,
       sLat:17.8888,
       sLon:73.8888,
       Dialog:false,
@@ -211,9 +212,10 @@ export default class NavRouteMaps extends Component {
     coords:cooords,
       showAl:false})
       
-    axios.post("http://26f96df0.ngrok.io/route?slon="+uLong+"&slat="+uLat+"&elon="+pLong+"&elat="+pLat+"&range=300000")
+    axios.post('http://b6bd9870.ngrok.io/route?slon='+uLong+"&slat="+uLat+"&elon="+pLong+"&elat="+pLat+"&range=300000")
     .then(s=>{
 
+      //http://5c30fac7.ngrok.io
       //http://192.168.43.204:5003/route?slon="+uLong+"&slat="+uLat+"&elon="+pLong+"&elat="+pLat+"&range=300000
         
          let FinCoooords =[]
@@ -277,7 +279,7 @@ export default class NavRouteMaps extends Component {
 
         <Mapbox.MapView styleURL={Mapbox.StyleURL.Street}
             zoomLevel={12}
-            centerCoordinate={[72.86661427,19.26196225]}
+            centerCoordinate={[75.8064162,26.8903878]}
             style={styles.container}>
             
          

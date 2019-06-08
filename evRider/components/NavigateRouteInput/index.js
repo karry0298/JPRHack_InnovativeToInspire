@@ -6,8 +6,9 @@ import Mapbox from '@mapbox/react-native-mapbox-gl';
 
 Mapbox.setAccessToken('sk.eyJ1Ijoia2FycnkwMjk4IiwiYSI6ImNqcXVtcXJ3aTBrZHE0Mm55MjE1bm9xM28ifQ.B3V1a-Yd0Q1PS2GDjZ-_bg');
 
-const CurrentPlace = { description: 'Current Location', geometry: { location: { lat: 18.968835, lng: 72.831353 } }};
+const CurrentPlace = { description: 'Current Location', geometry: { location: { lat: 26.8903878, lng: 75.8064162 } }};
  
+//lat: 18.968835, lng: 72.831353
 
 export default class NavigateRoute extends Component {
   static navigationOptions = {

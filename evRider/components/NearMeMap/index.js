@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text,StyleSheet,Image,FlatList,TouchableOpacity, AppState} from 'react-native';
+import { View, Text,StyleSheet,Image,FlatList,TouchableOpacity,ScrollView , AppState} from 'react-native';
 import Mapbox from '@mapbox/react-native-mapbox-gl';
 import {Button,List,Fab,Icon} from 'native-base';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
@@ -9,8 +9,12 @@ import Dialog, { DialogTitle,DialogContent,DialogFooter,DialogButton,SlideAnimat
 import geolib from 'geolib'
 import { IP } from '../../utils/constants' 
 import openMap from 'react-native-open-maps';
-
+import Toggle from '../ToggleComponent'
 import BatteryDialog from '../BatteryDialog/batteryDialog'
+import {abc} from '../../utils/services';
+import {xyz} from '../../utils/shops';
+//console.log(abc.services[0])
+
 Mapbox.setAccessToken('sk.eyJ1Ijoia2FycnkwMjk4IiwiYSI6ImNqcXVtcXJ3aTBrZHE0Mm55MjE1bm9xM28ifQ.B3V1a-Yd0Q1PS2GDjZ-_bg');
 
 var bord = 150
@@ -21,8 +25,8 @@ class NearMeMap extends Component {
     super(props);
 
     this.state = {
-        latitude: 19.13566162451865,
-        longitude: 72.86615863993508,
+        latitude: 26.8903878,
+        longitude: 75.8064162,
         placeLat : '',
         placeLon : '',
         Dialog:false,
@@ -52,6 +56,9 @@ class NearMeMap extends Component {
         statusMessage:'charging',
         colorText:'black',
         DialogPrice:120,
+        time: 0,
+        isOn: false,
+        start: 0
    };
 
     this.tracker = this.tracker.bind(this);
@@ -64,6 +71,7 @@ class NearMeMap extends Component {
 
   goToYosemite(coors) {
     openMap( { travelType : "drive",
+    start:`26.8975863,75.7588051`,
     end : `${coors[0]},${coors[1]}`} )
   }
 
@@ -138,12 +146,11 @@ class NearMeMap extends Component {
 
   componentDidMount(){
 
-    console.disableYellowBox = true
-    // const abc = this.map.zoomLevel()
-    // console.log("Trying to get zoooooooooooom   ",abc)
+      this.interval = setInterval(() => this.setState({ time: Date.now() ,valueBattery: this.state.valueBattery - 10 }), 1000);
+    
+    console.disableYellowBox = true   
+  
 
-    // this.cameraLoop();
-   
     this.watchID = navigator.geolocation.watchPosition(
       position => {
 
@@ -170,6 +177,11 @@ class NearMeMap extends Component {
 
 
     let rout = this.props.navigation.getParam("abc");
+
+
+   
+    //http://5c30fac7.ngrok.io
+
     //http://192.168.43.141:2454/api/getAllStation
     //http://6d4afe20.ngrok.io/api/getAllStation
     axios.get("https://evayserver.onrender.com/api/getAllStation")
@@ -199,28 +211,46 @@ class NearMeMap extends Component {
 
   }
 
-
-
-  // cameraLoop () {
-  //   requestAnimationFrame(async () => {
-  //     const abc = await this.Mapbox.getPitch();
-  //     // const nextZoomLevel = this.state.zoomLevel === 12 ? 2 : 12;
-  //     // this.setState({ zoomLevel: nextZoomLevel });
-  //     console.log("Trying to get zoooooooooooom   ",abc)
-  //     this.cameraLoop();
-  //   });
-  // }
-
-
+/*-------------------------------------------------------------------------------------------------------------------------------------------------------*/ 
 
   
 
+// startTimer() {
+//   this.setState({
+//     isOn: true,
+//     time: this.state.time,
+//     start: Date.now() - this.state.time
+//   })
+//   this.timer = setInterval(() => this.setState({
+//     time: Date.now() - this.state.start
+//   }), 10);
+
+//   //startTimer()
+//   console.log("THIS IS TIMEEEEEEEEEEEEEEEEEEEEEE....   ",this.ti)
+// }
+
+// stopTimer() {
+//   this.setState({isOn: false})
+//   clearInterval(this.timer)
+// }
 
 
+// tick() {
+//   this.setState(prevState => ({
+//     time: prevState.time + 1
+//   }));
+// }
+
+// componentWillUnmount() {
+//   clearInterval(this.interval);
+// }
 
 
+componentWillUnmount() {
+  clearInterval(this.interval);
+}  
 
-  
+
   /* --------------------------------------------------------Background tracking for app---------------------------------------------------------- */
 
   tracker(nlat, nlon, time = Date.now()){
@@ -286,6 +316,16 @@ class NearMeMap extends Component {
  
 
   render() {
+
+    console.log("Ahhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh  ",this.state.time)
+
+    if(this.state.valueBattery < 50){
+      console.log("THis is End")
+      this.props.navigation.navigate('insurence')
+
+      this.setState({valueBattery:this.state.valueBattery+10})
+      clearInterval(this.interval);
+    }
 
     var cords = [];
 
@@ -376,9 +416,10 @@ class NearMeMap extends Component {
 {/* --------------------------------------------------------MapView Rendering---------------------------------------------------------- */}
 
 
+
         <Mapbox.MapView styleURL={Mapbox.StyleURL.Street}
             zoomLevel={12}
-            centerCoordinate={[72.872334,19.132236]}
+            centerCoordinate={[75.8064162,26.8903878]}
             style={[styles.container,{zIndex:-1}]}
             >
 
@@ -407,88 +448,106 @@ class NearMeMap extends Component {
           </View>
 {/* --------------------------------------------------------Pop Up On selecting a point from maps---------------------------------------------------------- */}
         <Dialog
-                onDismiss={() => {
-                this.setState({ Dialog: false });
-                }}
-                width={0.90}
-                visible={this.state.Dialog}
-                rounded
-                actionsBordered
-                >
+              onDismiss={() => { this.setState({ Dialog: false }) }}
+              width={0.90}
+              visible={this.state.Dialog}
+              rounded
+              actionsBordered
+              onTouchOutside  ={()=>{ this.setState({ Dialog: false })}}
+              >
 
-                <View style={{flexDirection:"row",justifyContent: "space-between",alignItems: "center", padding:5}}>
-                    <Text style={{marginLeft:5,textAlign:'center',fontSize:30 ,color:"black", fontWeight: 'bold',}} >{this.state.DialogTitle}</Text>
-                    <Text style={{ padding:3, textAlign:'center',borderWidth:1, borderRadius:3, borderColor:"black", fontSize:30 ,color:"black",}} >₹ {this.state.DialogPrice}</Text>
-                </View>
-            
-                <Image style={{width:"100%",height:200,borderBottomWidth:0.7,borderColor:"#bab8b8"}} source={{uri:this.state.DialogUri}}></Image>
+          <ScrollView>
 
-                <View style={{flexDirection:"row",justifyContent: "space-between",alignItems: "center",marginTop:10}}>
-                    <Text style={{marginLeft:10,fontSize:15}} >{this.state.DialogMail}</Text>
-                    <Text style={{marginRight:10,fontSize:15}}>{this.state.owner}</Text> 
-                </View>
+              <View style={{flexDirection:"row",justifyContent: "space-between",alignItems: "center", padding:5}}>
+                  <Text style={{marginLeft:5,textAlign:'center',fontSize:30 ,color:"black", fontWeight: 'bold',}} >{this.state.DialogTitle}</Text>
+                  <Text style={{ padding:3, textAlign:'center',borderWidth:1, borderRadius:3, borderColor:"black", fontSize:27 ,color:"black",}} >₹ {this.state.DialogPrice}</Text>
+              </View>
+          
+              <Image style={{width:"100%",height:200,borderBottomWidth:0.7,borderColor:"#bab8b8"}} source={{uri:this.state.DialogUri}}></Image>
 
-                <View style={{marginTop:5, borderBottomColor: '#e5e5e5',borderBottomWidth: 0.8,}} />
-
-
-                <View style={{flexDirection:"row",justifyContent: "space-between",alignItems: "center",marginTop:10}}>
-                    <Rating
-                        imageSize={30}
-                        readonly
-                        startingValue={this.state.DialogRating}
-                        style={{marginLeft:10}}
-                        />
-                    <View style={{flexDirection:"row",marginRight:10}}>
-                        <FontAwesome5 name={this.state.DialogIcon} brand style={{marginRight:10,paddingLeft:5 , fontSize: 30, color:'black'}} />   
-                        <Text style={{paddingTop:3}}>{this.state.DialogIcon}</Text> 
-                    </View>   
-                </View>
-
-                <View style={{marginTop:5, borderBottomColor: '#e5e5e5',borderBottomWidth: 0.8,}} />
-
-                <View style={{marginTop:10, flexDirection:"row",justifyContent:"space-around" }}>
-                      <FlatList 
-                        numColumns={4}
-                        data = {this.state.dialogC}
-                        
-                        renderItem={i => {
-                            // console.warn("Baka Entered") 
-                            var queueLength = Math.floor(Math.random() * 4);
-                            return (
-                                <View style={{ flex:1, flexDirection:"column", borderWidth:1, borderColor:"#e5e5e5", borderRadius:5}}>
-                                  <Image style={{alignSelf:"center", width:45,height:45,margin:7}} source={i.item} ></Image>
-                                  <Text style={{textAlign:"center", fontSize:15, marginLeft:15, marginRight:15,borderRadius:5, padding:3, backgroundColor:"#4200AE",color:"white"}}>{queueLength}</Text>
-                                  </View>
-                            )}}
-                      >
-                    </FlatList>
-                </View>
-
-
-                <Text style={{marginLeft:10, fontSize:15, paddingTop:10, paddingBottom:10 }}>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text.</Text>
-                <Text style={{marginLeft:10}}>There will be loading shedding between 6 PM to 9PM on 9 March 2019 </Text>
-
-            <View style={{bottom:0}}>
               <View>
 
-                  <Button style={{backgroundColor:'#6200EE' , width:'100%'}} onPress={() => {this.goToYosemite( [this.state.placeLat, this.state.placeLon] )}}>
-                    <Text style={{fontSize:21 , paddingLeft:130 , color:"white"}} >  Nav </Text>
-                    <FontAwesome5 name={"location-arrow"} brand style={{paddingLeft:5, marginRight:130 , fontSize: 20, color:"white"}} />        
-                  </Button>                              
+                    <View style={{flexDirection:"row",justifyContent: "space-between",alignItems: "center",marginTop:10}}>
+                        <Text style={{marginLeft:10,fontSize:15}} >{this.state.DialogMail}</Text>
+                        <Text style={{marginRight:10,fontSize:15}}>{this.state.owner}</Text> 
+                    </View>
+
+                    <View style={{marginTop:5, borderBottomColor: '#e5e5e5',borderBottomWidth: 0.8,}} />
+
+
+                    <View style={{flexDirection:"row",justifyContent: "space-between",alignItems: "center",marginTop:10}}>
+                        <Rating
+                            imageSize={30}
+                            readonly
+                            startingValue={this.state.DialogRating}
+                            style={{marginLeft:10}}
+                            />
+                        <View style={{flexDirection:"row",marginRight:10}}>
+                            <FontAwesome5 name={this.state.DialogIcon} brand style={{marginRight:10,paddingLeft:5 , fontSize: 30, color:'black'}} />   
+                            <Text style={{paddingTop:3}}>{this.state.DialogIcon}</Text> 
+                        </View>   
+                    </View>
+
+                    <View style={{marginTop:5, borderBottomColor: '#e5e5e5',borderBottomWidth: 0.8,}} />
+
+                    <View style={{marginTop:10, flexDirection:"row",justifyContent:"space-around" }}>
+                        <FlatList 
+                          numColumns={4}
+                          data = {this.state.dialogC}
+                          
+                          renderItem={i => {
+                              // console.warn("Baka Entered") 
+                              var queueLength = Math.floor(Math.random() * 4);
+                              return (
+                                  <View style={{ flex:1, flexDirection:"column", borderWidth:1, borderColor:"#e5e5e5", borderRadius:5}}>
+                                    <Image style={{alignSelf:"center", width:45,height:45,margin:7}} source={i.item} ></Image>
+                                    <Text style={{textAlign:"center", fontSize:15, marginLeft:15, marginRight:15,borderRadius:5, padding:3, backgroundColor:"#4200AE",color:"white"}}>{queueLength}</Text>
+                                    </View>
+                              )}}
+                          >
+                        </FlatList>
+                    </View>
+
+
+                    <Text style={{marginLeft:10, fontSize:15, paddingTop:10, paddingBottom:10 }}>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text.</Text>
+                    <Text style={{marginLeft:10}}>There will be loading shedding between 6 PM to 9PM on 9 March 2019 </Text>
+                
+                    <View style={{marginTop:5, borderBottomColor: '#e5e5e5',borderBottomWidth: 0.8,}} />
+                              
+                    <View style={{marginBottom:10}}>
+
+                        <Toggle title="Near By EV Services" text= {abc.services} />
+                        <View style={{marginTop:5, borderBottomColor: '#e5e5e5',borderBottomWidth: 0.8,}} />
+                        <Toggle title="Near By EV Shops" text={xyz.services} />
+     
+                       
+                    </View>
+                
               </View>
 
-              <View style={{flexDirection:"row"}}>
-                  <Button style ={{flex:1}} light onPress={() => {this.setState({ Dialog: false });}}>
-                    <Text style={{fontSize:21 , paddingLeft:35}}>    Back </Text>
-                    <FontAwesome5 name={"reply"} brand style={{paddingLeft:5 , paddingRight:35 , fontSize: 20, color:'black'}} />        
-                  </Button>
-                  <Button style ={{flex:1}} light onPress={() => {this.setState({ Dialog: false });}}>
-                    <Text style={{fontSize:21}} >          Fav </Text>
-                    <FontAwesome5 name={"star"} brand style={{paddingLeft:5 , fontSize: 20, color:'black', paddingRight:85}} />        
-                  </Button>
-              </View>
+          <View style={{bottom:0}}>
+            <View>
+
+                <Button style={{backgroundColor:'#6200EE' , width:'100%'}} onPress={() => {this.goToYosemite( [this.state.placeLat, this.state.placeLon] )}}>
+                  <Text style={{fontSize:21 , paddingLeft:130 , color:"white"}} >  Nav </Text>
+                  <FontAwesome5 name={"location-arrow"} brand style={{paddingLeft:5, marginRight:130 , fontSize: 20, color:"white"}} />        
+                </Button>                              
             </View>
-          </Dialog>
+
+            <View style={{flexDirection:"row"}}>
+                <Button style ={{flex:1}} light onPress={() => {this.setState({ Dialog: false });}}>
+                  <Text style={{fontSize:21 , paddingLeft:35}}>    Back </Text>
+                  <FontAwesome5 name={"reply"} brand style={{paddingLeft:5 , paddingRight:35 , fontSize: 20, color:'black'}} />        
+                </Button>
+                <Button style ={{flex:1}} light onPress={() => {this.setState({ Dialog: false });}}>
+                  <Text style={{fontSize:21}} >          Fav </Text>
+                  <FontAwesome5 name={"star"} brand style={{paddingLeft:5 , fontSize: 20, color:'black', paddingRight:85}} />        
+                </Button>
+            </View>
+          </View>
+
+          </ScrollView>
+        </Dialog>
 
 {/* --------------------------------------------------------PopUp for battery level---------------------------------------------------------- */}
 
