@@ -51,8 +51,8 @@ class NearMeMap extends Component {
         borderColor:'orange',
         statusMessage:'charging',
         colorText:'black',
-        DialogPrice:120
-    };
+        DialogPrice:120,
+   };
 
     this.tracker = this.tracker.bind(this);
     this.callServer = this.callServer.bind(this);
@@ -139,6 +139,10 @@ class NearMeMap extends Component {
   componentDidMount(){
 
     console.disableYellowBox = true
+    // const abc = this.map.zoomLevel()
+    // console.log("Trying to get zoooooooooooom   ",abc)
+
+    // this.cameraLoop();
    
     this.watchID = navigator.geolocation.watchPosition(
       position => {
@@ -166,10 +170,11 @@ class NearMeMap extends Component {
 
 
     let rout = this.props.navigation.getParam("abc");
-
-    axios.get("http://192.168.43.141:2454/api/getAllStation")
+    //http://192.168.43.141:2454/api/getAllStation
+    //http://6d4afe20.ngrok.io/api/getAllStation
+    axios.get("https://evayserver.onrender.com/api/getAllStation")
     .then(s=>{
-
+      //http://6d4afe20.ngrok.io/api/test
         const rout = s.data.data;
         var cooors = []
 
@@ -194,6 +199,28 @@ class NearMeMap extends Component {
 
   }
 
+
+
+  // cameraLoop () {
+  //   requestAnimationFrame(async () => {
+  //     const abc = await this.Mapbox.getPitch();
+  //     // const nextZoomLevel = this.state.zoomLevel === 12 ? 2 : 12;
+  //     // this.setState({ zoomLevel: nextZoomLevel });
+  //     console.log("Trying to get zoooooooooooom   ",abc)
+  //     this.cameraLoop();
+  //   });
+  // }
+
+
+
+  
+
+
+
+
+
+
+  
   /* --------------------------------------------------------Background tracking for app---------------------------------------------------------- */
 
   tracker(nlat, nlon, time = Date.now()){
@@ -355,11 +382,9 @@ class NearMeMap extends Component {
             style={[styles.container,{zIndex:-1}]}
             >
 
+          {this.renderAnno()}
 
-        {this.renderAnno()}
-
-
-        {cords}
+          {cords}
         
         </Mapbox.MapView> 
 
