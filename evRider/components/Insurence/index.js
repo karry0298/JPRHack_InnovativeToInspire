@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text,FlatList } from 'react-native';
+import { View, Text,FlatList,TouchableOpacity } from 'react-native';
 import { Button,Container,List,Content,Icon,Thumbnail} from "native-base";
 import ListItem from './Listitem.js';
 import ListPartnered from './ListPartnered';
@@ -55,7 +55,10 @@ class Insurence extends Component {
           renderRow={data => {
             console.log("babababbababa   ",data)
             return (
-              <ListItem name={data.name} price={data.price} rating={data.rating} plan={data.plan} partner={data.partner} />
+              <TouchableOpacity onPress={()=> this.props.navigation.navigate('insurenceDetails',{details:{name:data.name , price:data.price , plan:data.plan , rating:data.rating}})}>
+                  <ListItem name={data.name} price={data.price} rating={data.rating} plan={data.plan} partner={data.partner} />  
+              </TouchableOpacity>
+
               );
             }}
         />

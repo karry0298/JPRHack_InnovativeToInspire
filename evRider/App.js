@@ -25,6 +25,8 @@ import RouteNearMe from './components/RouteNearMe';
 import filterScreen from './components/Filter';
 import feedbackScreen from './components/Feedback'
 import ChatScreen from './components/Chat'
+import Insurence from './components/Insurence'
+import InsurenceDetails from './components/InsurenceDetails'
 import Start from './Start';
 import Profile from './profile.js'
 import Sort from './components/Sort'
@@ -57,6 +59,8 @@ const AppNavigator = createStackNavigator({
   navigateRoute:{screen:NavigateRouteInput},
   navigateMaps:{screen:NavRouteMaps},
   filter : { screen : filterScreen },
+  insurence : {screen : Insurence},
+  insurenceDetails : {screen : InsurenceDetails}
   },
   {
   defaultNavigationOptions: ({navigation}) => {

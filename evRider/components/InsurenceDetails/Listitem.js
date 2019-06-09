@@ -25,7 +25,7 @@ export default class ListItem extends Component {
             
             <View style={{flex:0.5 , justifyContent:'center' , alignItems: 'center', }}>
               <Rating
-                imageSize={20}
+                imageSize={30}
                 readonly
                 startingValue={this.props.rating}
                 style={{marginLeft:10}}

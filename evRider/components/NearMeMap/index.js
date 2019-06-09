@@ -58,7 +58,7 @@ class NearMeMap extends Component {
         DialogPrice:120,
         time: 0,
         isOn: false,
-        start: 0
+        cycle: 0
    };
 
     this.tracker = this.tracker.bind(this);
@@ -146,7 +146,7 @@ class NearMeMap extends Component {
 
   componentDidMount(){
 
-      this.interval = setInterval(() => this.setState({ time: Date.now() ,valueBattery: this.state.valueBattery - 10 }), 1000);
+      this.interval = setInterval(() => this.setState({ time: Date.now() ,valueBattery: this.state.valueBattery - 10 , cycle: this.state.cycle + 1 , DialogBattery:true }), 1000);
     
     console.disableYellowBox = true   
   
@@ -214,36 +214,6 @@ class NearMeMap extends Component {
 /*-------------------------------------------------------------------------------------------------------------------------------------------------------*/ 
 
   
-
-// startTimer() {
-//   this.setState({
-//     isOn: true,
-//     time: this.state.time,
-//     start: Date.now() - this.state.time
-//   })
-//   this.timer = setInterval(() => this.setState({
-//     time: Date.now() - this.state.start
-//   }), 10);
-
-//   //startTimer()
-//   console.log("THIS IS TIMEEEEEEEEEEEEEEEEEEEEEE....   ",this.ti)
-// }
-
-// stopTimer() {
-//   this.setState({isOn: false})
-//   clearInterval(this.timer)
-// }
-
-
-// tick() {
-//   this.setState(prevState => ({
-//     time: prevState.time + 1
-//   }));
-// }
-
-// componentWillUnmount() {
-//   clearInterval(this.interval);
-// }
 
 
 componentWillUnmount() {

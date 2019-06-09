@@ -6,7 +6,7 @@ import { Rating} from 'react-native-elements';
 
 
 
-export default class ListItem extends Component {
+export default class ListPartnered extends Component {
   render() {
     
     return (    
@@ -17,7 +17,7 @@ export default class ListItem extends Component {
             <View style={{flex:0.5}}>
               <View style={{flexDirection:'row'}}>
                  <Text blurRadius={1} style={{color:'black' , fontSize:23, paddingLeft:20 ,paddingRight:5}}>{this.props.name}</Text>
-                 {/* <Text style={{borderWidth:1 , borderColor:'black',borderRadius:50,fontSize:10, paddingLeft:5,paddingRight:5,paddingTop:2,marginBottom:15}}>Partner</Text> */}
+                 <Text style={{borderWidth:1 , borderColor:'blue' ,backgroundColor:'blue',borderRadius:50,fontSize:10, paddingLeft:5,paddingRight:5,paddingTop:2,marginBottom:15,color:'white'}}>Partner</Text>
               
               </View>
               <Text blurRadius={1} style={{color:'grey' , fontSize:12, paddingLeft:20 ,paddingRight:5}}>{this.props.plan}</Text>
@@ -25,7 +25,7 @@ export default class ListItem extends Component {
             
             <View style={{flex:0.5 , justifyContent:'center' , alignItems: 'center', }}>
               <Rating
-                imageSize={20}
+                imageSize={30}
                 readonly
                 startingValue={this.props.rating}
                 style={{marginLeft:10}}
