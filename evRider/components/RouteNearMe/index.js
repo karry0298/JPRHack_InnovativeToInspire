@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, Image ,ScrollView, } from 'react-native';
+import { View, Text, StyleSheet, Image ,ScrollView,Dimensions } from 'react-native';
 import Mapbox from '@mapbox/react-native-mapbox-gl';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import axios from 'axios';
-import { Container, Header, Row, Button, Icon, Fab, Content } from 'native-base';
+import { Container, Header, Row, Button, Icon, Fab, Content,Input } from 'native-base';
 
 
 Mapbox.setAccessToken('sk.eyJ1Ijoia2FycnkwMjk4IiwiYSI6ImNqcXVtcXJ3aTBrZHE0Mm55MjE1bm9xM28ifQ.B3V1a-Yd0Q1PS2GDjZ-_bg');
@@ -20,148 +20,59 @@ export default class RouteNearMe extends Component {
       sLat: 17.8888,
       sLon: 73.8888,
       colorArr:['white','white','white','white','white'],
-      routea: {
-        "type": "FeatureCollection",
-        "features": [
-          {
-            "type": "Feature",
-            "properties": {},
-            "geometry": {
-              "type": "LineString",
-              "coordinates": [
-              ]
-            }
-          }
-        ]
-      },
-      routeb: {
-        "type": "FeatureCollection",
-        "features": [
-          {
-            "type": "Feature",
-            "properties": {},
-            "geometry": {
-              "type": "LineString",
-              "coordinates": [
-              ]
-            }
-          }
-        ]
-      }
-
+      stars:'0',
+      comment:'',
+      user:'raj',
+      service:''      
     }
   }
 
-//   colorHex = () => {
-//     let letters = '0123456789ABCDEF';
-//     let color = '#';
-//     for (let i = 0; i < 6; i++ ) {
-//         color += letters[Math.floor(Math.random() * 16)];
-//     }
-//     return color;
-// }
-  renderAnnotations(a, b, title) {
-    //console.warn(imgPik)
-
-    console.warn(title)
-    return (
-      <Mapbox.PointAnnotation
-        key={title}
-        id={title}
-        coordinate={[a, b]}>
-
-        <FontAwesome5 name={"map-marker-alt"} brand style={{ paddingLeft: 15, fontSize: 25, color: "red" }} />
-
-        <Mapbox.Callout title={title} />
-      </Mapbox.PointAnnotation>
-    )
-  }
   colorBox(num){
     let arr=[]
     for (i = 0; i < 5; i++) { 
      arr[i]='white'
     }
     arr[num]='#ffe502'
-    this.setState({colorArr:arr})
+
+    var abc = (num+1).toString()
+    
+
+    this.setState({colorArr:arr , stars:abc})
     console.log('hio')
   }
 
   componentDidMount() {
-    const { navigation } = this.props;
-    const uLong = navigation.getParam("uLongitude")
-    const uLat = navigation.getParam("uLatitude")
-    const pLat = navigation.getParam("pLatitude")
-    const pLong = navigation.getParam("pLongitude")
-
-    axios.post("http://192.168.43.229:5003/route?slon=" + uLong + "&slat=" + uLat + "&elon=" + pLong + "&elat=" + pLat + "&range=30000")
-      .then(s => {
-
-        let FinCoooords = []
-        let routFin = []
-        let coooords = []
-
-        for (i = 0; i < s.data.length; i++) {
-
-          coooords = []
-          for (j = 0; j < s.data[i].length; j++) {
-            coooords.push([parseFloat(s.data[i][j].lon), parseFloat(s.data[i][j].lat)])
-          }
-
-          let rut = {
-            "type": "FeatureCollection",
-            "features": [
-              {
-                "type": "Feature",
-                "properties": {},
-                "geometry": {
-                  "type": "LineString",
-                  "coordinates": coooords
-                }
-              }
-            ]
-          }
-
-          routFin.push(rut)
-        }
-
-        this.setState({
-          sLon: uLong,
-          sLat: uLat,
-          dLon: pLong,
-          dLat: pLat,
-          routea: routFin[0],
-          routeb: routFin[1]
-        })
-
-      })
-      .catch(e => {
-        console.log("some errp ", e);
-      })
+    const { navigation } = this.props;  
+    this.setState({service:navigation.getParam('name')})
+    
   }
 
+  paramsUpload(){
+    axios.get('https://randomtest001.000webhostapp.com/getrating.php',
+    {
+      stars:this.state.stars,
+      comment:this.state.comment,
+      user:this.state.user,
+      name:this.state.service
+    })
+    .then(s=> {
+        console.log("Successss")
+        console.log(this.state.stars)
+        console.log(this.state.comment)
+        console.log(this.state.user)
+        console.log(this.state.service)
+        this.props.navigation.navigate('nearmeMap')
+    } )
+    .catch(e=>{
+      console.log("some errp ",e);
+    })
+  }
 
   render() {
 
     let colorss = ["red", "blue", "brown"]
 
-    const route = {
-      "type": "FeatureCollection",
-      "features": [
-        {
-          "type": "Feature",
-          "properties": {},
-          "geometry": {
-            "type": "LineString",
-            "coordinates": [
-              [
-                72.86661427,
-                19.26196225
-              ]
-            ]
-          }
-        }
-      ]
-    }
+    
     const { navigation } = this.props;
     const imgURL = navigation.getParam('img')
 
@@ -249,7 +160,7 @@ export default class RouteNearMe extends Component {
               </View>
 
 
-              <View style={{marginLeft: 20, marginRight: 20, marginTop: 5 , marginBottom:25}}> 
+              {/* <View style={{marginLeft: 20, marginRight: 20, marginTop: 5 , marginBottom:25}}> 
                   <Text style={{fontSize: 17, color: 'black', fontWeight: '200' ,  borderBottomColor: 'black',borderBottomWidth: 1, }}>This was a nice place</Text>              
                 </View>
 
@@ -263,6 +174,15 @@ export default class RouteNearMe extends Component {
 
                 <View style={{marginLeft: 20, marginRight: 20, marginTop: 5 , marginBottom:25}}> 
                   <Text style={{fontSize: 17, color: 'black', fontWeight: '200' ,  borderBottomColor: 'black',borderBottomWidth: 1, }}>Charging is slow</Text>              
+                </View> */}
+
+                <Input placeholder='Enter your reviews here ...' onChangeText={text => this.setState({comment:text})} placeholderTextColor="black" style={{paddingLeft:25 , color:'black'}} />
+
+                <View style={{margin:10,alignContent:'center'}}>
+                  <Button style={{width:Dimensions.get('window').width-30 , borderRadius:15,alignSelf:'center',justifyContent:'center'}}
+                    onPress={() => this.paramsUpload()}>
+                    <Text style={{textAlign:'center',color:'white',fontSize:20}}>Submit</Text>
+                  </Button>
                 </View>
 
               </ScrollView>

@@ -11,7 +11,8 @@ const routes = [
                 {title:"rout" , name:"Help Section" , icon:"question-circle"},
                 {title:"filter",name:"Filter", icon:"filter"},
                 {title:"feedback",name:"Feedback", icon:"comments"},
-                {title:"chat",name:"Chatroom", icon:"comment-dots"}];
+                {title:"chat",name:"Chatroom", icon:"comment-dots"},
+                {title:"services",name:"Services", icon:"comment-dots"}];
 
 export default class SideBar extends React.Component {
   render() {

@@ -39,7 +39,7 @@ export default class SignIn extends Component {
                     <Text style={[styles.status,{color:this.props.colorText}]} > Status:{this.props.statusMessage}</Text>
                 </View>
                 <View >
-                    <Text style={{fontSize:22,fontWeight:'bold',color:'#000',marginTop:10}} > Estimated Range</Text>
+                    <Text style={{fontSize:22,fontWeight:'bold',color:'#000',marginTop:10}} >Insurence Cycle - {this.props.cycleIns}</Text>
                 </View>
 
                 <View style={{margin:10,marginTop:55}}>

@@ -25,7 +25,8 @@ import RouteNearMe from './components/RouteNearMe';
 import filterScreen from './components/Filter';
 import feedbackScreen from './components/Feedback'
 import ChatScreen from './components/Chat'
-import Insurence from './components/Insurence'
+import Insurence from './components/Insurence';
+import Services from './components/Services'
 import InsurenceDetails from './components/InsurenceDetails'
 import Start from './Start';
 import Profile from './profile.js'
@@ -41,7 +42,8 @@ const Mdn = createDrawerNavigator({
   feedback : { screen : feedbackScreen },
   chat : { screen : ChatScreen},
   sort : {screen : Sort},
-  prof : { screen : Profile }
+  prof : { screen : Profile },
+  services : {screen:Services}
 },
 {
   contentComponent: SideBar,

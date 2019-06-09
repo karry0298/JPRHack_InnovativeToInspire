@@ -44,7 +44,9 @@ class Insurence extends Component {
           renderRow={data => {
             console.log("babababbababa   ",data)
             return (
-              <ListPartnered name={data.name} price={data.price} rating={data.rating} plan={data.plan} partner={data.partner} />
+              <TouchableOpacity onPress={()=> this.props.navigation.navigate('insurenceDetails',{details:{name:data.name , price:data.price , plan:data.plan , rating:data.rating}})}>
+                 <ListPartnered name={data.name} price={data.price} rating={data.rating} plan={data.plan} partner={data.partner} />
+              </TouchableOpacity>
               );
             }}
         />

@@ -212,7 +212,7 @@ export default class NavRouteMaps extends Component {
     coords:cooords,
       showAl:false})
       
-    axios.post('http://b6bd9870.ngrok.io/route?slon='+uLong+"&slat="+uLat+"&elon="+pLong+"&elat="+pLat+"&range=300000")
+    axios.post('http://b6bd9870.ngrok.io/route?slon='+uLong+"&slat="+uLat+"&elon="+pLong+"&elat="+pLat+"&range=70")
     .then(s=>{
 
       //http://5c30fac7.ngrok.io

@@ -75,9 +75,9 @@ class InsurenceDetails extends Component {
           </View>
         </View>
 
-        <View style={{margin:10 , width:}}>
-          <Button>
-            <Text>Buy Now</Text>
+        <View style={{margin:10,alignContent:'center'}}>
+          <Button style={{width:Dimensions.get('window').width-30 , borderRadius:15,alignSelf:'center',justifyContent:'center'}}>
+            <Text style={{textAlign:'center',color:'white',fontSize:20}}>Buy Now</Text>
           </Button>
         </View>
 

@@ -145,8 +145,6 @@ class NearMeMap extends Component {
 /* --------------------------------------------------------On start function---------------------------------------------------------- */
 
   componentDidMount(){
-
-      this.interval = setInterval(() => this.setState({ time: Date.now() ,valueBattery: this.state.valueBattery - 10 , cycle: this.state.cycle + 1 , DialogBattery:true }), 1000);
     
     console.disableYellowBox = true   
   
@@ -213,7 +211,10 @@ class NearMeMap extends Component {
 
 /*-------------------------------------------------------------------------------------------------------------------------------------------------------*/ 
 
-  
+tickTimer(){
+  this.setState({DialogBattery:true})
+  this.interval = setInterval(() => this.setState({ time: Date.now() ,valueBattery: this.state.valueBattery - 10 , cycle: this.state.cycle + 1 , DialogBattery:true }), 5000);
+}
 
 
 componentWillUnmount() {
@@ -289,7 +290,7 @@ componentWillUnmount() {
 
     console.log("Ahhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh  ",this.state.time)
 
-    if(this.state.valueBattery < 50){
+    if(this.state.valueBattery < 40){
       console.log("THis is End")
       this.props.navigation.navigate('insurence')
 
@@ -367,7 +368,7 @@ componentWillUnmount() {
                 </View>
               </Button>
 
-                <Button style={{flex:3, backgroundColor:"#6200EE", }} onPress={()=>this.setState({DialogBattery:true})} >
+                <Button style={{flex:3, backgroundColor:"#6200EE", }} onPress={()=> this.tickTimer() } >
                 <View style={{paddingLeft:4, paddingRight:4, flexDirection:"row",justifyContent: 'space-around',  }}>
 
                     <FontAwesome5 name={"battery-three-quarters"} brand style={{transform: [{ rotate: '270deg'}],fontSize: 20, color:"white" }} />
@@ -527,6 +528,7 @@ componentWillUnmount() {
               dialogVisible={this.state.DialogBattery}
               borderColor={this.state.borderColor}
               colorText={this.state.colorText}
+              cycleIns={this.state.cycle}
             />
 
         </View>
